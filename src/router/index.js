@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Login from '@/components/login.vue';
+import Register from '@/components/register.vue';
 import Index from '@/views/index.vue';
 import BigClassManager from '@/views/BigClassManager';
 import StudentInfoManage from '@/views/StudentManage/StudentInfoManage';
@@ -17,6 +18,11 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
     },
     {
       path: '/',

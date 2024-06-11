@@ -1,22 +1,154 @@
 <template>
-    <div>
-      <h1>登录页面</h1>
-      <button @click="login">登录</button>
+  <div id="LoginIndex">
+    <div style="padding: 20px;box-shadow: 0 3px 6px rgb(0 0 0 / 15%);margin-bottom: 10px;">
+        <p style="font-size: 28px;color: #0052d9;margin: 0;font-weight: bold;">Smart-Edu-X-教师端</p>
+      </div>
+
+    <div style="display: flex; justify-content: center; align-items: center;height: 80%;">
+      <t-card class="left-card">
+
+        <div style="display: flex;justify-content: space-between;align-items: center;width: 400px;margin: 40px auto;">
+          <p class="loginText">管理员登录</p>
+          <div style="display: flex;">
+            <p style="font-size: 16px;">还没有账号？</p>
+            <router-link to="/register" style="text-decoration: none;">
+              <p class="registerText">立即注册 ></p>
+            </router-link>
+          </div>
+        </div>
+
+        <!-- 输入账号 -->
+        <input v-model="mobile" autocomplete="off" placeholder="请输入手机号" id="login-dialog_mobile" aria-required="true"
+          class="ant-input css-13vyxf7 ant-input-outlined" type="text" value="" style=" height: 54px; font-size: 16px;">
+        <!-- 输入密码 -->
+        <div style="position: relative;margin-top: 2vh;">
+          <input v-model="password" autocomplete="off" placeholder="请输入密码" id="login-dialog_password"
+            aria-required="true" class="ant-input css-13vyxf7 ant-input-outlined" type="password" value=""
+            style="height: 54px; font-size: 16px; margin-top: 10px;">
+
+          <!-- 小眼睛图标 -->
+          <span style="position: absolute; top: 60%; right: 13px; transform: translateY(-50%); cursor: pointer;"
+            @click="togglePasswordVisibility">
+            <svg viewBox="64 64 896 896" focusable="false" data-icon="eye-invisible" width="1.5em" height="1.5em"
+              fill="currentColor" aria-hidden="true">
+              <!-- 显示密码明文时的眼睛图标 -->
+              <path v-if="showPassword" fill="#000000"
+                d="M942.2 486.2C847.4 286.5 704.1 186 512 186c-192.2 0-335.4 100.5-430.2 300.3a60.3 60.3 0 000 51.5C176.6 737.5 319.9 838 512 838c192.2 0 335.4-100.5 430.2-300.3 7.7-16.2 7.7-35 0-51.5zM512 766c-161.3 0-279.4-81.8-362.7-254C232.6 339.8 350.7 258 512 258c161.3 0 279.4 81.8 362.7 254C791.5 684.2 673.4 766 512 766zm-4-430c-97.2 0-176 78.8-176 176s78.8 176 176 176 176-78.8 176-176-78.8-176-176-176zm0 288c-61.9 0-112-50.1-112-112s50.1-112 112-112 112 50.1 112 112-50.1 112-112 112z">
+              </path>
+              <!-- 显示密码暗文时的眼睛图标 -->
+              <path v-else fill="#000000"
+                d="M942.2 486.2Q889.47 375.11 816.7 305l-50.88 50.88C807.31 395.53 843.45 447.4 874.7 512 791.5 684.2 673.4 766 512 766q-72.67 0-133.87-22.38L323 798.75Q408 838 512 838q288.3 0 430.2-300.3a60.29 60.29 0 000-51.5zm-63.57-320.64L836 122.88a8 8 0 00-11.32 0L715.31 232.2Q624.86 186 512 186q-288.3 0-430.2 300.3a60.3 60.3 0 000 51.5q56.69 119.4 136.5 191.41L112.48 835a8 8 0 000 11.31L155.17 889a8 8 0 0011.31 0l712.15-712.12a8 8 0 000-11.32zM149.3 512C232.6 339.8 350.7 258 512 258c54.54 0 104.13 9.36 149.12 28.39l-70.3 70.3a176 176 0 00-238.13 238.13l-83.42 83.42C223.1 637.49 183.3 582.28 149.3 512zm246.7 0a112.11 112.11 0 01146.2-106.69L401.31 546.2A112 112 0 01396 512z">
+              </path>
+            </svg>
+          </span>
+
+        </div>
+        <!-- 登录按钮 -->
+        <t-button block theme="primary" variant="base" size="large"
+          style="height: 54px;font-size: 16px;margin-top: 40px;" @click="onClickLogin()">登录</t-button>
+      </t-card>
+      <img src="https://s2.loli.net/2024/06/11/nUrtz3gxaHCXfuJ.png"
+        style="width: 500px;height: 500px; margin-left: 20px;border-radius: 20px;" />
+      <!-- 这里放置第二个内容 -->
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'LoginIndex',
-    methods: {
-      login() {
-        this.$router.push('/index');
-      }
+  </div>
+</template>
+
+<script>
+import { teacherLoginAPI } from "@/apis/teacherHandler"
+export default {
+  name: 'LoginIndex',
+  data() {
+    return {
+      mobile: '',
+      password: '',
+      showPassword: false
     }
-  };
-  </script>
-  
-  <style scoped>
-  /* 根据需要添加样式 */
-  </style>
-  
+  },
+  methods: {
+    async onClickLogin() {
+      await teacherLoginAPI(this.password, this.mobile)
+        .then(response => {
+          //console.log(response);
+          if (response.data.code == 0) {
+            const token = response.data.data.teachertoken;
+            const teacher = response.data.data
+            localStorage.setItem('token', token);
+            localStorage.setItem('teacher', JSON.stringify(teacher));
+            this.$router.push('/index');
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    },
+    togglePasswordVisibility() {
+      this.showPassword = !this.showPassword;
+      const passwordInput = document.getElementById('login-dialog_password');
+      passwordInput.type = this.showPassword ? 'text' : 'password';
+    }
+  }
+};
+</script>
+
+<style scoped>
+#LoginIndex {
+  background-color: #f9fbfd;
+  height: 100vh;
+}
+
+.left-card {
+  width: 600px;
+  height: 500px;
+  margin-right: 20px;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+}
+
+.loginText {
+  color: #191919;
+  font-size: 24px;
+  line-height: 1.15;
+  font-weight: 400;
+}
+
+.registerText {
+  color: #099DFD;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.ant-input:placeholder-shown {
+  text-overflow: ellipsis;
+}
+
+:where(.css-13vyxf7).ant-input-outlined {
+  background: #ffffff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+}
+
+::placeholder {
+  /* Latest browsers */
+  color: #cecaca;
+}
+
+.ant-input {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 4px 11px;
+  color: rgba(32, 20, 20, 0.88);
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  list-style: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  min-width: 0;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+</style>
