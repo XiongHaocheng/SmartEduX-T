@@ -62,3 +62,28 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
     }
       });
     };
+    
+  //修改教师名
+  export const changeTeacherNameAPI = (teacherid,teachername) => {
+    return request({
+      url: "/teacher/changeteachername", 
+      method: "post",
+      params:{
+        teacherid: teacherid,
+        teachername:teachername
+    }
+      });
+    };
+  //修改密码
+  export const updatePasswordAPI = (teacherphone,oldpassword,newpassword) =>{
+    return request({
+      url:"/teacher/updatePassword",
+      method:"post",
+      data:{
+        teacherphone,
+        oldpassword,
+        newpassword,
+      }
+    })
+  };
+  

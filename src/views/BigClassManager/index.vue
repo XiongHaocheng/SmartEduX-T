@@ -1,5 +1,12 @@
 <template>
+
   <div id="BigClassManager">
+<!--搜索-->
+    <div style="padding: 10px; background-color: #f5f5f5; display: flex; align-items: center;">
+    <label for="search" style="margin-right: 10px;">搜索：</label>
+    <input type="text" id="search" v-model="searchQuery" @input="handleSearch" placeholder="搜索你想要的" style="flex: 1; padding: 5px;border: none;border-radius: 10px;">
+  </div>
+<!--表格-->
     <div>
       <div style="display: flex; height: 100%;padding: 10px; background-color: white">
         <t-table class="custom-table" rowKey="index" :data="data" :columns="columns" :stripe="stripe"
@@ -34,6 +41,7 @@ export default {
   name: 'BigClassManager',
   data() {
     return {
+      searchQuery:'',//搜索内容
       data: initialData,
       size: 'medium',
       tableLayout: false,
@@ -65,6 +73,20 @@ export default {
     }
   },
   methods: {
+    //搜索功能
+    handleSearch() {
+    if (this.searchQuery) {
+      this.data = initialData.filter(item => {
+        // 根据需要调整搜索条件，例如对特定字段进行搜索
+        return Object.values(item).some(value => 
+          String(value).toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      });
+    } else {
+      // 如果搜索框为空，则显示所有数据
+      this.data = initialData;
+    }
+  },
     rehandleClickOp(row) {
       if (row.status === 1) {
         // 如果状态为 1，则执行查看详情的操作，即下载文件
@@ -102,7 +124,7 @@ export default {
       const response = await getAttachmentPathAPI(row.courseid);
       if (response.data.code == 0) {
         const attachmentPath = response.data.data;
-        // 创建 <a> 元素并模拟点击下载
+        // 查看附件
         var a = document.createElement('a');
         a.href = attachmentPath;
         a.download = '测试.pdf';
