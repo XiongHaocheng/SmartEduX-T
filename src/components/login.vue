@@ -8,7 +8,7 @@
       <t-card class="left-card">
 
         <div style="display: flex;justify-content: space-between;align-items: center;width: 400px;margin: 40px auto;">
-          <p class="loginText">管理员登录</p>
+          <p class="loginText">教师登录</p>
           <div style="display: flex;">
             <p style="font-size: 16px;">还没有账号？</p>
             <router-link to="/register" style="text-decoration: none;">
