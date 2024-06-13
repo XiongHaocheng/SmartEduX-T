@@ -86,4 +86,17 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
       }
     })
   };
-  
+  //获取学生管理页面信息
+  export const getUserInfoAPI = () =>{
+    return request({
+      url:"/teacher/studentmanageinfo",
+      method:"get",
+    })
+  };
+  //获取学生的总学习时长
+    export const getUserStudyTimeAPI = () =>{
+    return request({
+      url:"/teacher/studentstudytime",
+      method:"get",
+    })
+  };

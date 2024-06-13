@@ -8,18 +8,10 @@
             <icon slot="icon" name="calculation-1" />
             课程管理
           </t-menu-item>
-          <t-submenu value="resource">
-            <template #title>
-              <icon slot="icon" name="server" />
-              学生管理
-            </template>
-            <t-menu-item value="student-info">
-              学生信息管理
-            </t-menu-item>
-            <t-menu-item value="student-study">
-              学生学习情况
-            </t-menu-item>
-          </t-submenu>
+          <t-menu-item value="student-info">
+            <icon slot="icon" name="server" />
+            学生管理
+          </t-menu-item>
           <t-menu-item value="root">
             <icon slot="icon" name="root-list" />
             考试记录
@@ -40,10 +32,6 @@
             <Header></Header>
             <StudentInfoManage></StudentInfoManage>
           </div>
-          <div v-else-if="selectedMenu === 'student-study'">
-            <Header></Header>
-            <StudentStudyManage></StudentStudyManage>
-          </div>
           <div v-else-if="selectedMenu === 'root'">
             <Header></Header>
             <TestManage></TestManage>
@@ -62,7 +50,6 @@
 import { Icon } from 'tdesign-icons-vue';
 import BigClassManager from '@/views/BigClassManager';
 import StudentInfoManage from '@/views/StudentManage/StudentInfoManage';
-import StudentStudyManage from '@/views/StudentManage/StudentStudyManage';
 import TestManage from '@/views/TestManage';
 import TeacherPerson from '@/views/TeacherPerson';
 import Header from '@/components/header.vue';
@@ -73,7 +60,6 @@ export default {
     Icon,
     BigClassManager,
     StudentInfoManage,
-    StudentStudyManage,
     TestManage,
     TeacherPerson,
     Header,
