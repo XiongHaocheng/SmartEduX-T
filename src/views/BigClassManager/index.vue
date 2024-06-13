@@ -7,7 +7,6 @@
     <input type="text" id="search" v-model="searchQuery" @input="handleSearch" placeholder="搜索你想要的" style="flex: 1; padding: 5px;border: none;border-radius: 10px;">
   </div>
 <!--表格-->
-    <div>
       <div style="display: flex; height: 100%;padding: 10px; background-color: white">
         <t-table class="custom-table" rowKey="index" :data="data" :columns="columns" :stripe="stripe"
           :bordered="bordered" :hover="hover" :size="size" :table-layout="tableLayout ? 'auto' : 'fixed'"
@@ -29,7 +28,7 @@
         </t-table>
 
       </div>
-    </div>
+
   </div>
 </template>
 

@@ -100,3 +100,10 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
       method:"get",
     })
   };
+  //获取考试记录
+  export const getTestRecordAPI = () =>{
+    return request({
+      url:"/teacher/testrecord",
+      method:"get",
+    })
+  };
