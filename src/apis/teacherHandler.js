@@ -11,6 +11,7 @@ export const teacherLoginAPI = (password,mobile) => {
     }
   })
 };
+
 //教师注册
 export const teacherRegisterAPI = (password,mobile,name) => {
     return request({
@@ -23,6 +24,7 @@ export const teacherRegisterAPI = (password,mobile,name) => {
     }
     })
     };
+
 //课程信息获取
 export const getBigcourseInfoAPI = () => {
   return request({
@@ -30,6 +32,7 @@ export const getBigcourseInfoAPI = () => {
   method: "get",
   })
   };
+
 //上传文件
 export const uploadPDFAPI = (courseid,fileName,filepath) => {
   return request({
@@ -42,6 +45,7 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
   }
     });
   };
+
   //查看文件
   export const getAttachmentPathAPI = (courseid) => {
     return request({
@@ -52,6 +56,7 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
     }
       });
     };
+
   //删除文件
   export const deleteAttachmentAPI = (courseid) => {
     return request({
@@ -74,6 +79,7 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
     }
       });
     };
+
   //修改密码
   export const updatePasswordAPI = (teacherphone,oldpassword,newpassword) =>{
     return request({
@@ -86,6 +92,7 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
       }
     })
   };
+
   //获取学生管理页面信息
   export const getUserInfoAPI = () =>{
     return request({
@@ -93,6 +100,7 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
       method:"get",
     })
   };
+
   //获取学生的总学习时长
     export const getUserStudyTimeAPI = () =>{
     return request({
@@ -100,10 +108,22 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
       method:"get",
     })
   };
+
   //获取考试记录
   export const getTestRecordAPI = () =>{
     return request({
       url:"/teacher/testrecord",
       method:"get",
+    })
+  };
+
+  //获取学习情况中的课程学习情况信息
+  export const getLearnTimeCourseInfoAPI = (userid) =>{
+    return request({
+      url:"/teacher/getlearntimecourse",
+      method:"get",
+      params:{
+        userid: userid,
+    }
     })
   };

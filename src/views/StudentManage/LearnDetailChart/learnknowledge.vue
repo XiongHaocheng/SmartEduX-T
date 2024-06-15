@@ -122,12 +122,6 @@ export default {
     font-weight: 600;
 }
 
-.subtitle {
-    font-size: 17px;
-    color: #4B5B76;
-    font-weight: 550;
-}
-
 .custom-tabs {
     background-color: transparent !important;
 }

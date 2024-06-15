@@ -1,6 +1,6 @@
 <template>
     <div style="width: 100%;margin-top: -10px; ">
-        <p class="subtitle">学习活跃度图表</p>
+        <p class="text1">学习活跃度图表</p>
         <div id="actChart" style="width: 100%; height: 20vh;"></div>
         <p>发现该同学在12月份较为活跃</p>
     </div>

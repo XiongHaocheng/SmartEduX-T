@@ -1,25 +1,76 @@
 <template>
     <div style="height: 100%;margin-top: -10px;">
-        <p class="text1">课程学习时长前四</p>
-        <div style="height: 20vh;">
-        <p style="font-size: 18px;color: #4B5B76;margin-left:20px;">学习A课时长：</p>
-        <p style="font-size: 18px;color: #4B5B76;margin-left:20px;">学习B课时长：</p>
-        <p style="font-size: 18px;color: #4B5B76;margin-left:20px;">学习C课时长：</p>
-        <p style="font-size: 18px;color: #4B5B76;margin-left:20px;">学习D课时长：</p>
-    </div>
-        <p>该同学学习A课的时长最多</p>
+        <p class="text1">订阅课程学习情况</p>
+        <div style="max-height: 20vh; overflow: auto;">
+            <div v-for="(course, index) in courses" :key="index">
+                <p style="font-size: 16px; color: #4B5B76; margin-left: 20px;">
+                    《{{ course.coursename }}》学习情况：{{ course.studytime }}分钟
+                </p>
+                <div style="display: flex;">
+                    <p style="font-size: 14px; color: #4B5B76; margin-left: 20px;">
+                        已完成：
+                    </p>
+                    <p style="font-size: 14px; color: #2ba471;">
+                        {{ course.finished }}课时
+                    </p>
+                    <p style="font-size: 14px; color: #4B5B76; margin-left: 20px;">
+                        未完成：
+                    </p>
+                    <p style="font-size: 14px; color: #d54941;">
+                        {{ course.unfinished }}课时
+                    </p>
+                </div>
+            </div>
+        </div>
+        <p>该同学学习《{{ maxCourseName }}》的时长最多</p>
     </div>
 </template>
 
 <script>
+import { getLearnTimeCourseInfoAPI } from '@/apis/teacherHandler';
 export default {
     name: ' LearnTime_Course',
     data() {
         return {
+            userid: '',
+            courses: [],
+            maxCourseName: '',//学习时间最长的课程名
+        }
+    },
+    created() {
+        const urlParams = new URLSearchParams(window.location.search);
+        this.userid = urlParams.get('userid');
+    },
+    async mounted() {
+        await this.getLearnTimeCourseInfoAPI(this.userid)
+    },
+    methods: {
+        async getLearnTimeCourseInfoAPI(userid) {
+            try {
+                const response = await getLearnTimeCourseInfoAPI(userid);
+                // 将课程信息存储在数组中
+                console.log(response.data.data.courses)
+                // 使用 forEach 遍历 response 数组中的每个元素
+                response.data.data.courses.forEach(course => {
+                    this.courses.push({
+                        coursename: course.coursename,
+                        studytime: parseFloat(course.studytime).toFixed(2),
+                        finished: course.finished,
+                        unfinished: course.unfinished
+                    });
+                });
+                // 根据 studytime 对课程数组进行排序（从小到大）
+                this.courses.sort((a, b) => parseFloat(a.studytime) - parseFloat(b.studytime));
 
+                // 获取最长时间的课程名
+               this.maxCourseName = this.courses[this.courses.length - 1].coursename;
+            } catch (error) {
+                console.error('Error fetching course info:', error);
+            }
         }
     }
 }
+
 
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div style="width: 100%;margin-top: -10px;">
-        <p class="subtitle">学习时间图表</p>
+        <p class="text1">学习时间图表</p>
         <div id="timeChart" style="width: 100%; height: 20vh;"></div>
         <p>发现该同学在14:00-17:00较为活跃</p>
     </div>
@@ -73,12 +73,6 @@ export default {
     font-size: 20px;
     color: #4B5B76;
     font-weight: 600;
-}
-
-.subtitle {
-    font-size: 17px;
-    color: #4B5B76;
-    font-weight: 550;
 }
 
 .custom-tabs {

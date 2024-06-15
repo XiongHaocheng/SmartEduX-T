@@ -118,7 +118,7 @@ export default {
     async getTestRecordAPI() {
       initialData.length = 0;
       this.total = 0;
-      const response = await getTestRecordAPI(); // 假设这里是获取后端数据的异步操作
+      const response = await getTestRecordAPI(); 
       if (response.data.code == 0) {
         const responseData = response.data.data;
         Object.keys(responseData).forEach(key => {
