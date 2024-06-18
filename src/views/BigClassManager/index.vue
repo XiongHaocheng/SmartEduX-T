@@ -103,7 +103,7 @@ export default {
         return;
       }
       const fileName = file.name;
-      const filepath = 'http://192.168.56.1:8081/'
+      const filepath = 'http://192.168.56.1:8082/'
       // 发送文件名上传请求到后端
       const courseid = parseInt(this.selectedCourseId)
       const response = await uploadPDFAPI(courseid, fileName, filepath);

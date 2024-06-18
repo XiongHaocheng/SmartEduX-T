@@ -127,3 +127,26 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
     }
     })
   };
+    //获取上课闭眼睡觉次数信息
+    export const getSleepChartInfoAPI = () =>{
+      return request({
+        url:"/teacher/sleepnums",
+        method:"get",
+ 
+      })
+    };
+
+    //获取上课吃东西打哈欠次数信息
+  export const getEatChartInfoAPI = () =>{
+    return request({
+      url:"/teacher/eatnums",
+      method:"get",
+    })
+  };
+     //获取考试违规次数信息
+     export const getTestChartInfoAPI = () =>{
+      return request({
+        url:"/teacher/testnums",
+        method:"get",
+      })
+    }; 

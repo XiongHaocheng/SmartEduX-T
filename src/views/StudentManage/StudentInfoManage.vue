@@ -23,16 +23,84 @@
       </t-table>
 
     </div>
+    <!--折线图-->
+    <div id="sleep" style="height: 300px;margin-top: 20px;"></div>
+    <div id="eat" style="height: 300px;margin-top: 20px;"></div>
   </div>
 </template>
 
 <script>
-import { getUserInfoAPI, getUserStudyTimeAPI } from '@/apis/teacherHandler';
+import { getUserInfoAPI, getUserStudyTimeAPI, getSleepChartInfoAPI, getEatChartInfoAPI } from '@/apis/teacherHandler';
+import * as echarts from 'echarts';
 const initialData = [];
 export default {
   name: 'StudentInfoManage',
   data() {
     return {
+      sleepChart: null,
+      sleepOption: {
+        backgroundColor: '#FFFFFF', // 设置背景颜色为白色
+        title: {
+          text: '近七天上课闭眼、打瞌睡次数'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: []
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [],
+      },
+      eatChart: null,
+      eatOption: {
+        backgroundColor: '#FFFFFF', // 设置背景颜色为白色
+        title: {
+          text: '近七天上课吃东西、打哈欠次数'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: []
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [],
+      },
       searchQuery: '',//搜索内容
       data: initialData,
       size: 'medium',
@@ -60,8 +128,40 @@ export default {
   },
   async mounted() {
     await this.getUserInfoAPI();
+    await this.getSleepChartInfoAPI();
+    await this.getEatChartInfoAPI();
+    this.initSleepChart();
+    this.initEatChart();
+    window.addEventListener('resize', this.chart.resize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.chart.resize);
   },
   methods: {
+    getLast7Days() {
+      const result = [];
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const weekDay = ['周天', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
+        result.push(`${weekDay} ${month}/${day}`);
+      }
+      return result;
+    },
+    initSleepChart() {
+      this.sleepChart = echarts.init(document.getElementById('sleep'));
+      this.sleepOption.xAxis.data = this.getLast7Days();
+      this.sleepChart.setOption(this.sleepOption);
+    
+    },
+    initEatChart(){
+      this.eatChart = echarts.init(document.getElementById('eat'));
+      this.eatOption.xAxis.data = this.getLast7Days();
+      this.eatChart.setOption(this.eatOption);
+
+    },
     //排序
     sortChange(sortInfo) {
       // 对于受控属性而言，这里的赋值很重要，不可缺少
@@ -146,11 +246,22 @@ export default {
         this.pagination.total = this.total;
         this.data = initialDataindex;
       }
+    },
+    async getSleepChartInfoAPI(){
+     const response =  await getSleepChartInfoAPI()
+     this.sleepOption.legend.data = response.data.data.data
+     this.sleepOption.series = response.data.data.series
+    },
+    async getEatChartInfoAPI(){
+      const response =  await getEatChartInfoAPI()
+     
+     this.eatOption.legend.data = response.data.data.data
+     this.eatOption.series = response.data.data.series
     }
-
-
   }
+
 }
+
 </script>
 
 <style scoped>

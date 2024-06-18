@@ -7,24 +7,57 @@
         style="flex: 1; padding: 5px;border: none;border-radius: 10px;">
     </div>
     <!--表格-->
-
     <div style="display: flex; height: 100%;padding: 10px; background-color: white">
       <t-table rowKey="index" :data="data" :columns="columns" :stripe="stripe" :bordered="bordered" :hover="hover"
         :size="size" :table-layout="tableLayout ? 'auto' : 'fixed'" :pagination="pagination" :showHeader="showHeader"
         cellEmptyContent="-" resizable></t-table>
-
     </div>
+    <!--折线图-->
+    <div id="test" style="height: 300px;margin-top: 20px;"></div>
   </div>
 </template>
 
 <script lang="jsx">
 import { CheckCircleFilledIcon, CloseCircleFilledIcon } from 'tdesign-icons-vue';
-import { getTestRecordAPI } from '@/apis/teacherHandler';
+import { getTestRecordAPI, getTestChartInfoAPI } from '@/apis/teacherHandler';
+import * as echarts from 'echarts';
 const initialData = [];
 export default {
   name: 'TestManage',
   data() {
     return {
+      testChart: null,
+      testOption: {
+        backgroundColor: '#FFFFFF', // 设置背景颜色为白色
+        title: {
+          text: '近七天考试违规检测次数'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data: []
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
+        xAxis: {
+          type: 'category',
+          boundaryGap: false,
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [],
+      },
       searchQuery: '',//搜索内容
       data: initialData,
       size: 'medium',
@@ -82,10 +115,36 @@ export default {
     };
   },
   async mounted() {
-    
     await this.getTestRecordAPI();
+    await this.getTestChartInfoAPI();
+    this.initTestChart();
+    window.addEventListener('resize', this.chart.resize);
   },
   methods: {
+    getLast7Days() {
+      const result = [];
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const day = date.getDate();
+        const month = date.getMonth() + 1;
+        const weekDay = ['周天', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
+        result.push(`${weekDay} ${month}/${day}`);
+      }
+      return result;
+    },
+    initTestChart() {
+      this.testChart = echarts.init(document.getElementById('test'));
+      this.testOption.xAxis.data = this.getLast7Days();
+      this.testChart.setOption(this.testOption);
+
+    },
+    async getTestChartInfoAPI() {
+      const response = await getTestChartInfoAPI()
+      console.log(response)
+      this.testOption.legend.data = response.data.data.data
+      this.testOption.series = response.data.data.series
+    },
     //搜索功能
     handleSearch() {
       const statusNameListMap = {
@@ -118,7 +177,7 @@ export default {
     async getTestRecordAPI() {
       initialData.length = 0;
       this.total = 0;
-      const response = await getTestRecordAPI(); 
+      const response = await getTestRecordAPI();
       if (response.data.code == 0) {
         const responseData = response.data.data;
         Object.keys(responseData).forEach(key => {
