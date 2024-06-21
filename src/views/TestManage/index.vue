@@ -9,8 +9,8 @@
     <!--表格-->
     <div style="display: flex; height: 100%;padding: 10px; background-color: white">
       <t-table rowKey="index" :data="data" :columns="columns" :stripe="stripe" :bordered="bordered" :hover="hover"
-        :size="size" :table-layout="tableLayout ? 'auto' : 'fixed'" :pagination="pagination" :showHeader="showHeader"
-        cellEmptyContent="-" resizable></t-table>
+      :sort="sort" :size="size" :table-layout="tableLayout ? 'auto' : 'fixed'" :pagination="pagination" :showHeader="showHeader"
+        cellEmptyContent="-" resizable  @sort-change="sortChange"></t-table>
     </div>
     <!--折线图-->
     <div id="test" style="height: 300px;margin-top: 20px;"></div>
@@ -72,6 +72,9 @@ export default {
         { colKey: 'userName', title: '学生名' },
         { colKey: 'testPaperName', title: '试卷名' },
         { colKey: 'startTime', title: '考试开始时间' },
+        { colKey: 'finishtime', title: '考试结束时间' },
+        { colKey: 'testFullScore', title: '考试满分' },
+        { colKey: 'userScore', title: '考生得分', sortType: 'all', sorter: true,  },
         {
           colKey: 'finishstate',
           title: '是否完成考试',
@@ -88,8 +91,6 @@ export default {
             );
           },
         },
-        { colKey: 'testFullScore', title: '考试满分' },
-        { colKey: 'userScore', title: '考生得分' },
         {
           colKey: 'ispass',
           title: '是否通过',
@@ -102,6 +103,22 @@ export default {
               <t-tag shape="round" theme={statusNameListMap[row.ispass].theme} variant="light-outline">
                 {statusNameListMap[row.ispass].icon}
                 {statusNameListMap[row.ispass].label}
+              </t-tag>
+            );
+          },
+        },
+        {
+          colKey: 'ischeat',
+          title: '是否违规',
+          cell: (h, { row }) => {
+            const statusNameListMap = {
+              0: { label: '否', theme: 'danger', icon: <CloseCircleFilledIcon /> },
+              1: { label: '是', theme: 'success', icon: <CheckCircleFilledIcon /> },
+            };
+            return (
+              <t-tag shape="round" theme={statusNameListMap[row.ischeat].theme} variant="light-outline">
+                {statusNameListMap[row.ischeat].icon}
+                {statusNameListMap[row.ischeat].label}
               </t-tag>
             );
           },
@@ -121,6 +138,26 @@ export default {
     window.addEventListener('resize', this.chart.resize);
   },
   methods: {
+        //排序
+        sortChange(sortInfo) {
+      // 对于受控属性而言，这里的赋值很重要，不可缺少
+      this.sort = sortInfo;
+      this.request(sortInfo);
+      //console.log('sort-change', sortInfo);
+    },
+    request(sort) {
+      // 模拟异步请求，进行数据排序
+      const timer = setTimeout(() => {
+        if (sort) {
+          this.data = initialData
+            .concat()
+            .sort((a, b) => (sort.descending ? b[sort.sortBy] - a[sort.sortBy] : a[sort.sortBy] - b[sort.sortBy]));
+        } else {
+          this.data = initialData.concat();
+        }
+        clearTimeout(timer);
+      }, 100);
+    },
     getLast7Days() {
       const result = [];
       for (let i = 6; i >= 0; i--) {
@@ -178,6 +215,7 @@ export default {
       initialData.length = 0;
       this.total = 0;
       const response = await getTestRecordAPI();
+      console.log(response)
       if (response.data.code == 0) {
         const responseData = response.data.data;
         Object.keys(responseData).forEach(key => {
@@ -188,10 +226,12 @@ export default {
               userName: test.username,
               testPaperName: test.testpapername,
               startTime: test.starttime,
+              finishtime: test.finishtime,
               finishstate: parseInt(test.finishstate),
               testFullScore: test.fullscore,
               userScore: test.testscore,
-              ispass: parseInt(test.ispass)
+              ispass: parseInt(test.ispass),
+              ischeat: parseInt(test.ischeat)
             });
             this.total++;
           }
