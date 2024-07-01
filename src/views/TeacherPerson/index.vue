@@ -152,7 +152,7 @@ export default {
             .then(response => {
                 if(response.data.code == 0){
                     var teacher = response.data.data
-                     console.log(teacher);
+                     //console.log(teacher);
                     this.$store.state.teacher = teacher
                     localStorage.setItem('teacher',JSON.stringify(teacher))
                     localStorage.setItem('token',teacher.usertoken)

@@ -150,3 +150,45 @@ export const uploadPDFAPI = (courseid,fileName,filepath) => {
         method:"get",
       })
     }; 
+
+     //下面都是学生分析的图表
+    export const getLearningProcessAPI = (userID) => {
+      return request({
+        url: "bigcourseuser/getlearningprocess",
+        method: "get",
+        params:{
+            userID:userID,
+        }
+      })
+    }
+    
+export const getIntegralRecordAPI = (userid) => {
+  return request({
+    url: "integralrecord/getintegralrecord",
+    method: "get",
+    params: {
+      userid: userid
+    }
+  })
+}
+
+export const getAllDomain = (id) => {
+  return request({
+      url: "/testanalyse/getalldomain",
+      method: "get",
+      params:{
+          userid:id,
+      }
+  })
+}
+
+export const getRadarDataByIDAndDomain = (id,domain) => {
+  return request({
+      url: "/testanalyse/getradardatabyidanddomain",
+      method: "get",
+      params:{
+          userid:id,
+          domain:domain,
+      }
+  })
+}

@@ -39,41 +39,55 @@ export default {
     return {
       sleepChart: null,
       sleepOption: {
-        backgroundColor: '#FFFFFF', // 设置背景颜色为白色
-        title: {
-          text: '近七天上课闭眼、打瞌睡次数'
-        },
-        tooltip: {
-          trigger: 'axis'
-        },
-        legend: {
-          data: []
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          containLabel: true
-        },
-        toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
-        },
-        xAxis: {
-          type: 'category',
-          boundaryGap: false,
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [],
+      backgroundColor: '#FFFFFF', // 设置背景颜色为白色
+      title: {
+        text: '上课闭眼、打瞌睡次数'
       },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: []
+      },
+      dataZoom: [
+        {
+          type: 'inside',
+          start: 0,
+          end: 100,
+          top:250
+        },
+        {
+          start: 0,
+          end: 100,
+          top:250
+        }
+      ],
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '20%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      xAxis: {
+        type: 'category', // 明确指定x轴类型为category
+        boundaryGap: false,
+        data: [] // 这里将会由后端数据填充
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: []
+    },
       eatChart: null,
       eatOption: {
         backgroundColor: '#FFFFFF', // 设置背景颜色为白色
         title: {
-          text: '近七天上课吃东西、打哈欠次数'
+          text: '上课吃东西、打哈欠次数'
         },
         tooltip: {
           trigger: 'axis'
@@ -81,10 +95,23 @@ export default {
         legend: {
           data: []
         },
+        dataZoom: [
+        {
+          type: 'inside',
+          start: 0,
+          end: 100,
+          top:250
+        },
+        {
+          start: 0,
+          end: 100,
+          top:250
+        }
+      ],
         grid: {
           left: '3%',
           right: '4%',
-          bottom: '3%',
+          bottom: '20%',
           containLabel: true
         },
         toolbox: {
@@ -95,6 +122,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
+          data:[]
         },
         yAxis: {
           type: 'value'
@@ -138,27 +166,14 @@ export default {
     window.removeEventListener('resize', this.chart.resize);
   },
   methods: {
-    getLast7Days() {
-      const result = [];
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const weekDay = ['周天', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
-        result.push(`${weekDay} ${month}/${day}`);
-      }
-      return result;
-    },
+
     initSleepChart() {
       this.sleepChart = echarts.init(document.getElementById('sleep'));
-      this.sleepOption.xAxis.data = this.getLast7Days();
       this.sleepChart.setOption(this.sleepOption);
-    
+
     },
-    initEatChart(){
+    initEatChart() {
       this.eatChart = echarts.init(document.getElementById('eat'));
-      this.eatOption.xAxis.data = this.getLast7Days();
       this.eatChart.setOption(this.eatOption);
 
     },
@@ -247,16 +262,17 @@ export default {
         this.data = initialDataindex;
       }
     },
-    async getSleepChartInfoAPI(){
-     const response =  await getSleepChartInfoAPI()
-     this.sleepOption.legend.data = response.data.data.data
-     this.sleepOption.series = response.data.data.series
+    async getSleepChartInfoAPI() {
+      const response = await getSleepChartInfoAPI()
+      this.sleepOption.xAxis.data = response.data.data.allDates;
+      this.sleepOption.legend.data = response.data.data.data
+      this.sleepOption.series = response.data.data.series
     },
-    async getEatChartInfoAPI(){
-      const response =  await getEatChartInfoAPI()
-     
-     this.eatOption.legend.data = response.data.data.data
-     this.eatOption.series = response.data.data.series
+    async getEatChartInfoAPI() {
+      const response = await getEatChartInfoAPI()
+      this.eatOption.xAxis.data = response.data.data.allDates;
+      this.eatOption.legend.data = response.data.data.data
+      this.eatOption.series = response.data.data.series
     }
   }
 

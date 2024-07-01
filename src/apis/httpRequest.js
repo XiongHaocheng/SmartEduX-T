@@ -3,7 +3,7 @@ import axios from "axios";
 import { MessagePlugin } from 'tdesign-vue';
 
 const httpRequest = axios.create({
-    baseURL: 'http://localhost:9090',
+    baseURL: 'http://localhost:9091',
     timeout: 10000,
 })
 

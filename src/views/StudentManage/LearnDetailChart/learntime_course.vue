@@ -49,7 +49,7 @@ export default {
             try {
                 const response = await getLearnTimeCourseInfoAPI(userid);
                 // 将课程信息存储在数组中
-                console.log(response.data.data.courses)
+                //console.log(response.data.data.courses)
                 // 使用 forEach 遍历 response 数组中的每个元素
                 response.data.data.courses.forEach(course => {
                     this.courses.push({

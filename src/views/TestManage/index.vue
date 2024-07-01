@@ -30,7 +30,7 @@ export default {
       testOption: {
         backgroundColor: '#FFFFFF', // 设置背景颜色为白色
         title: {
-          text: '近七天考试违规检测次数'
+          text: '考试违规检测次数'
         },
         tooltip: {
           trigger: 'axis'
@@ -41,9 +41,22 @@ export default {
         grid: {
           left: '3%',
           right: '4%',
-          bottom: '3%',
+          bottom: '20%',
           containLabel: true
         },
+        dataZoom: [
+        {
+          type: 'inside',
+          start: 0,
+          end: 100,
+          top:250
+        },
+        {
+          start: 0,
+          end: 100,
+          top:250
+        }
+      ],
         toolbox: {
           feature: {
             saveAsImage: {}
@@ -52,6 +65,7 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
+          dataL:[]
         },
         yAxis: {
           type: 'value'
@@ -158,27 +172,14 @@ export default {
         clearTimeout(timer);
       }, 100);
     },
-    getLast7Days() {
-      const result = [];
-      for (let i = 6; i >= 0; i--) {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const weekDay = ['周天', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
-        result.push(`${weekDay} ${month}/${day}`);
-      }
-      return result;
-    },
     initTestChart() {
       this.testChart = echarts.init(document.getElementById('test'));
-      this.testOption.xAxis.data = this.getLast7Days();
       this.testChart.setOption(this.testOption);
 
     },
     async getTestChartInfoAPI() {
       const response = await getTestChartInfoAPI()
-      console.log(response)
+      this.testOption.xAxis.data = response.data.data.allDates;
       this.testOption.legend.data = response.data.data.data
       this.testOption.series = response.data.data.series
     },
@@ -215,7 +216,7 @@ export default {
       initialData.length = 0;
       this.total = 0;
       const response = await getTestRecordAPI();
-      console.log(response)
+      //console.log(response)
       if (response.data.code == 0) {
         const responseData = response.data.data;
         Object.keys(responseData).forEach(key => {

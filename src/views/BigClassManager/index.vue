@@ -108,13 +108,13 @@ export default {
       const courseid = parseInt(this.selectedCourseId)
       const response = await uploadPDFAPI(courseid, fileName, filepath);
       if (response.data.code == 0) {
-        console.log("文件上传成功");
+        //console.log("文件上传成功");
         const updatedRow = this.data.find(row => row.courseid === courseid);
         if (updatedRow) {
           updatedRow.status = 1; // 将 status 设为 1
         }
       } else {
-        console.error("文件上传失败");
+        //console.error("文件上传失败");
       }
     },
     //下载附件
