@@ -41,7 +41,7 @@ export default {
       sleepOption: {
       backgroundColor: '#FFFFFF', // 设置背景颜色为白色
       title: {
-        text: '上课闭眼、打瞌睡次数'
+        text: '上课睡觉、打瞌睡次数'
       },
       tooltip: {
         trigger: 'axis'
@@ -212,7 +212,7 @@ export default {
       }
     },
     rehandleClickOp(row) {
-      window.open(`/learndetail?userid=${row.userid}&username=${row.username}`, '_blank');
+      window.open(`/#/learndetail?userid=${row.userid}&username=${row.username}`, '_blank');
     },
 
     async getUserInfoAPI() {

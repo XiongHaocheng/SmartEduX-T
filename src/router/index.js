@@ -11,7 +11,7 @@ import LearnDetail from '@/views/StudentManage/LearnDetail.vue';
 Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
+  mode: 'hash',
   routes: [
     {
       path: '/login',
