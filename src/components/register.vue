@@ -10,13 +10,13 @@
             <!-- 左侧部分 -->
             <div style="flex: 1; padding: 20px;background-color: #f9f9fc;">
                 <div style="display: flex;margin-top: 100px;justify-content: center">
-                    <img src="https://web-cdn.agora.io/sso/static/img/icon-free.png"
+                    <img src="https://s2.loli.net/2024/07/17/uB5n1Zw87L3dxXg.png"
                         style="width: 100px;height: 100px;margin: 20px;" />
-                    <img src="https://web-cdn.agora.io/sso/static/img/icon-code.png"
+                    <img src="https://s2.loli.net/2024/07/17/I3YwWOc1XjvMLQa.png"
                         style="width: 100px;height: 100px;margin: 20px;" />
-                    <img src="https://web-cdn.agora.io/sso/static/img/icon-inter.png"
+                    <img src="https://s2.loli.net/2024/07/17/2Xxr9asnABQMNul.png"
                         style="width: 100px;height: 100px;margin: 20px;" />
-                    <img src="https://web-cdn.agora.io/sso/static/img/icon-global.png"
+                    <img src="https://s2.loli.net/2024/07/17/Qx6aZnSk9UoiThv.png"
                         style="width: 100px;height: 100px;margin: 20px;" />
                 </div>
 

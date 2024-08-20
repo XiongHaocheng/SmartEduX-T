@@ -4,7 +4,7 @@
         <div style="max-height: 20vh; overflow: auto;">
             <div v-for="(course, index) in courses" :key="index">
                 <p style="font-size: 16px; color: #4B5B76; margin-left: 20px;">
-                    《{{ course.coursename }}》学习情况：{{ course.studytime }}分钟
+                    《{{ course.coursename }}》学习情况：{{ course.studytime }}秒
                 </p>
                 <div style="display: flex;">
                     <p style="font-size: 14px; color: #4B5B76; margin-left: 20px;">
@@ -38,8 +38,10 @@ export default {
         }
     },
     created() {
-        const urlParams = new URLSearchParams(window.location.search);
-        this.userid = urlParams.get('userid');
+        let url = window.location.href;
+        // 使用正则表达式获取 userid 的值
+        let userid = url.match(/[?&]userid=([^&]+)/);
+        this.userid = userid ? userid[1] : null;
     },
     async mounted() {
         await this.getLearnTimeCourseInfoAPI(this.userid)
@@ -63,7 +65,7 @@ export default {
                 this.courses.sort((a, b) => parseFloat(a.studytime) - parseFloat(b.studytime));
 
                 // 获取最长时间的课程名
-               this.maxCourseName = this.courses[this.courses.length - 1].coursename;
+                this.maxCourseName = this.courses[this.courses.length - 1].coursename;
             } catch (error) {
                 console.error('Error fetching course info:', error);
             }

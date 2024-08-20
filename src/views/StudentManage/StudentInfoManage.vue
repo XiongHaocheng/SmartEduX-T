@@ -143,7 +143,7 @@ export default {
         { colKey: 'userid', title: '学号', width: '100' },
         { colKey: 'username', title: '姓名' },
         { colKey: 'userphone', title: '电话', },
-        { colKey: 'userstudytime', title: '学习总时长（分钟）', sortType: 'all', sorter: true, },
+        { colKey: 'userstudytime', title: '学习总时长（秒）', sortType: 'all', sorter: true, },
         { colKey: 'userscore', title: '学习积分', sortType: 'all', sorter: true, },
         { colKey: 'operation', title: '学习情况' },
       ],

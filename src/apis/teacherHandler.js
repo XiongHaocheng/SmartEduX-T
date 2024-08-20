@@ -33,18 +33,17 @@ export const getBigcourseInfoAPI = () => {
   })
   };
 
-//上传文件
-export const uploadPDFAPI = (courseid,fileName,filepath) => {
+// 上传文件
+export const uploadPDFAPI = (formData) => {
   return request({
-    url: "/teacher/upload", 
+    url: "/teacher/upload",
     method: "post",
-    params:{
-      courseid: courseid,
-      filename: fileName,
-      filepath: filepath,
-  }
-    });
-  };
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
 
   //查看文件
   export const getAttachmentPathAPI = (courseid) => {

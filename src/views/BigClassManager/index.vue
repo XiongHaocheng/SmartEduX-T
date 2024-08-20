@@ -1,33 +1,34 @@
 <template>
 
   <div id="BigClassManager">
-<!--搜索-->
+    <!--搜索-->
     <div style="padding: 10px; background-color: #f5f5f5; display: flex; align-items: center;">
-    <label for="search" style="margin-right: 10px;">搜索：</label>
-    <input type="text" id="search" v-model="searchQuery" @input="handleSearch" placeholder="搜索你想要的" style="flex: 1; padding: 5px;border: none;border-radius: 10px;">
-  </div>
-<!--表格-->
-      <div style="display: flex; height: 100%;padding: 10px; background-color: white">
-        <t-table class="custom-table" rowKey="index" :data="data" :columns="columns" :stripe="stripe"
-          :bordered="bordered" :hover="hover" :size="size" :table-layout="tableLayout ? 'auto' : 'fixed'"
-          :pagination="pagination" :showHeader="showHeader" cellEmptyContent="-" resizable>
-          <template #operation="{ row }">
-            <input type="file" ref="fileInput" style="display: none" @change="handleFileChange">
-            <div style="display: flex;">
-              <t-link theme="primary" hover="color" @click="rehandleClickOp(row)">
-                {{ row.status === 1 ? '查看详情' : '上传附件' }}
-              </t-link>
-              <svg v-if="row.status === 1" class="deleteIcon" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                xmlns="http://www.w3.org/2000/svg" @click="deleteAttachement(row)">
-                <path
-                  d="M7.5 1H16.5V4H22V6H19.971L19.471 23H4.52898L4.02898 6H2V4H7.5V1ZM9.5 4H14.5V3H9.5V4ZM6.02984 6L6.47102 21H17.529L17.9702 6H6.02984ZM13 8V19H11V8H13Z"
-                  fill="#0052d9" />
-              </svg>
-            </div>
-          </template>
-        </t-table>
+      <label for="search" style="margin-right: 10px;">搜索：</label>
+      <input type="text" id="search" v-model="searchQuery" @input="handleSearch" placeholder="搜索你想要的"
+        style="flex: 1; padding: 5px;border: none;border-radius: 10px;">
+    </div>
+    <!--表格-->
+    <div style="display: flex; height: 100%;padding: 10px; background-color: white">
+      <t-table class="custom-table" rowKey="index" :data="data" :columns="columns" :stripe="stripe" :bordered="bordered"
+        :hover="hover" :size="size" :table-layout="tableLayout ? 'auto' : 'fixed'" :pagination="pagination"
+        :showHeader="showHeader" cellEmptyContent="-" resizable>
+        <template #operation="{ row }">
+          <input type="file" ref="fileInput" style="display: none" @change="handleFileChange">
+          <div style="display: flex;">
+            <t-link theme="primary" hover="color" @click="rehandleClickOp(row)">
+              {{ row.status === 1 ? '查看详情' : '上传附件' }}
+            </t-link>
+            <svg v-if="row.status === 1" class="deleteIcon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              xmlns="http://www.w3.org/2000/svg" @click="deleteAttachement(row)">
+              <path
+                d="M7.5 1H16.5V4H22V6H19.971L19.471 23H4.52898L4.02898 6H2V4H7.5V1ZM9.5 4H14.5V3H9.5V4ZM6.02984 6L6.47102 21H17.529L17.9702 6H6.02984ZM13 8V19H11V8H13Z"
+                fill="#0052d9" />
+            </svg>
+          </div>
+        </template>
+      </t-table>
 
-      </div>
+    </div>
 
   </div>
 </template>
@@ -40,7 +41,7 @@ export default {
   name: 'BigClassManager',
   data() {
     return {
-      searchQuery:'',//搜索内容
+      searchQuery: '',//搜索内容
       data: initialData,
       size: 'medium',
       tableLayout: false,
@@ -74,18 +75,18 @@ export default {
   methods: {
     //搜索功能
     handleSearch() {
-    if (this.searchQuery) {
-      this.data = initialData.filter(item => {
-        // 根据需要调整搜索条件，例如对特定字段进行搜索
-        return Object.values(item).some(value => 
-          String(value).toLowerCase().includes(this.searchQuery.toLowerCase())
-        );
-      });
-    } else {
-      // 如果搜索框为空，则显示所有数据
-      this.data = initialData;
-    }
-  },
+      if (this.searchQuery) {
+        this.data = initialData.filter(item => {
+          // 根据需要调整搜索条件，例如对特定字段进行搜索
+          return Object.values(item).some(value =>
+            String(value).toLowerCase().includes(this.searchQuery.toLowerCase())
+          );
+        });
+      } else {
+        // 如果搜索框为空，则显示所有数据
+        this.data = initialData;
+      }
+    },
     rehandleClickOp(row) {
       if (row.status === 1) {
         // 如果状态为 1，则执行查看详情的操作，即下载文件
@@ -96,25 +97,30 @@ export default {
         this.selectedCourseId = row.courseid
       }
     },
-    //上传附件
     async handleFileChange(event) {
       const file = event.target.files[0];
       if (!file) {
         return;
       }
-      const fileName = file.name;
-      const filepath = 'http://192.168.56.1:8082/'
-      // 发送文件名上传请求到后端
-      const courseid = parseInt(this.selectedCourseId)
-      const response = await uploadPDFAPI(courseid, fileName, filepath);
-      if (response.data.code == 0) {
-        //console.log("文件上传成功");
-        const updatedRow = this.data.find(row => row.courseid === courseid);
-        if (updatedRow) {
-          updatedRow.status = 1; // 将 status 设为 1
+
+      const formData = new FormData();
+      formData.append('courseid', this.selectedCourseId); // 课程ID
+      formData.append('file', file);
+      formData.append('filepath', '/www/wwwroot/smartedux-teacher.com/'); // 这里替换为实际的文件保存路径
+
+      try {
+        const response = await uploadPDFAPI(formData);
+        if (response.data.code == 0) {
+          console.log("文件上传成功");
+          window.location.reload()
+          // 更新前端页面状态等操作
+        } else {
+          console.error("文件上传失败:", response.data.message);
+          // 处理上传失败情况
         }
-      } else {
-        //console.error("文件上传失败");
+      } catch (error) {
+        console.error("上传过程中发生错误:", error);
+        // 处理网络请求或其他错误
       }
     },
     //下载附件
@@ -126,7 +132,7 @@ export default {
         // 查看附件
         var a = document.createElement('a');
         a.href = attachmentPath;
-        a.download = '测试.pdf';
+        a.download = '附件.pdf';
         document.body.appendChild(a);
         a.click();
       } else {

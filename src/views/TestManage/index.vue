@@ -216,7 +216,7 @@ export default {
       initialData.length = 0;
       this.total = 0;
       const response = await getTestRecordAPI();
-      //console.log(response)
+      console.log(response)
       if (response.data.code == 0) {
         const responseData = response.data.data;
         Object.keys(responseData).forEach(key => {
